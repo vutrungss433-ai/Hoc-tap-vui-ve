@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Học Tập Vui - Toán, Lý, Tin (Lớp 11)</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f8ff; text-align: center; }
+        header { background-color: #4CAF50; color: white; padding: 20px; }
+        nav { margin: 20px; }
+        nav a { margin: 10px; padding: 10px; background-color: #2196F3; color: white; text-decoration: none; border-radius: 5px; }
+        nav a:hover { background-color: #0b7dda; }
+        .game { margin: 20px; padding: 20px; border: 1px solid #ccc; background-color: white; border-radius: 10px; }
+        button { padding: 10px; background-color: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #e68900; }
+        #result { margin-top: 10px; font-weight: bold; }
+        .correct { color: green; }
+        .wrong { color: red; }
+        #score { font-size: 20px; margin: 10px; }
+        canvas { border: 1px solid #000; background-color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🌟 Web Học Tập Vui - Toán, Lý, Tin (Lớp 11) 🌟</h1>
+        <p>Học mà chơi, chơi mà học! Chọn môn và thử thách với 5 trò chơi/môn. Điểm số của bạn: <span id="score">0</span></p>
+    </header>
+    
+    <nav>
+        <a href="#toan">Toán</a>
+        <a href="#ly">Lý</a>
+        <a href="#tin">Tin</a>
+    </nav>
+    
+    <section id="toan" class="game">
+        <h2>Toán Học - 5 Trò Chơi Vui</h2>
+        <h3>1. Giải Phương Trình Đại Số</h3>
+        <p>Giải: 3x - 5 = 10. Nhập x:</p>
+        <input type="number" id="toan1-answer">
+        <button onclick="checkToan1()">Kiểm tra</button>
+        <div id="toan1-result"></div>
+        
+        <h3>2. Quiz Hình Học</h3>
+        <p>Diện tích hình vuông cạnh 4cm là? (16, 20)</p>
+        <button onclick="quizToan2(16)">16</button>
+        <button onclick="quizToan2(20)">20</button>
+        <div id="toan2-result"></div>
+        
+        <h3>3. Puzzle Số Học</h3>
+        <p>Sắp xếp số: 1, 3, 2 thành dãy tăng dần (nhập: 1,2,3):</p>
+        <input type="text" id="toan3-answer" placeholder="1,2,3">
+        <button onclick="checkToan3()">Kiểm tra</button>
+        <div id="toan3-result"></div>
+        
+        <h3>4. Quiz Đại Số (Đạo Hàm)</h3>
+        <p>Đạo hàm của x² là? (2x, x)</p>
+        <button onclick="quizToan4('2x')">2x</button>
+        <button onclick="quizToan4('x')">x</button>
+        <div id="toan4-result"></div>
+        
+        <h3>5. Mô Phỏng Đồ Thị Hàm Số</h3>
+        <p>Vẽ đồ thị y = x² (nhấp để bắt đầu):</p>
+        <canvas id="toan5-canvas" width="300" height="200"></canvas>
+        <button onclick="drawGraph()">Vẽ đồ thị</button>
+        <div id="toan5-result"></div>
+    </section>
+    
+    <section id="ly" class="game">
+        <h2>Lý Học - 5 Trò Chơi Vui</h2>
+        <h3>1. Mô Phỏng Trọng Lực</h3>
+        <p>Nhấp vào quả bóng để xem nó rơi! (Mô phỏng: Nhấp nhiều lần để tăng tốc.)</p>
+        <button onclick="simulateGravity()">Nhấp quả bóng</button>
+        <div id="ly1-result">Số lần nhấp: 0 (Tốc độ rơi: 0 m/s)</div>
+        
+        <h3>2. Quiz Lực Và Chuyển Động</h3>
+        <p>Đơn vị của lực là? (Newton, Joule)</p>
+        <button onclick="quizLy2('Newton')">Newton</button>
+        <button onclick="quizLy2('Joule')">Joule</button>
+        <div id="ly2-result"></div>
+        
+        <h3>3. Puzzle Điện Từ</h3>
+        <p>Chọn đúng: Dòng điện chạy qua dây dẫn khi? (Có từ trường, Không có từ trường)</p>
+        <button onclick="puzzleLy3('Có từ trường')">Có từ trường</button>
+        <button onclick="puzzleLy3('Không có từ trường')">Không có từ trường</button>
+        <div id="ly3-result"></div>
+        
+        <h3>4. Quiz Sóng Ánh Sáng</h3>
+        <p>Tốc độ ánh sáng trong chân không là? (3x10^8 m/s, 3x10^6 m/s)</p>
+        <button onclick="quizLy4('3x10^8 m/s')">3x10^8 m/s</button>
+        <button onclick="quizLy4('3x10^6 m/s')">3x10^6 m/s</button>
+        <div id="ly4-result"></div>
+        
+        <h3>5. Mô Phỏng Dao Động</h3>
+        <p>Mô phỏng con lắc (nhấp để bắt đầu dao động):</p>
+        <canvas id="ly5-canvas" width="300" height="200"></canvas>
+        <button onclick="startPendulum()">Bắt đầu dao động</button>
+        <div id="ly5-result"></div>
+    </section>
+    
+    <section id="tin" class="game">
+        <h2>Tin Học - 5 Trò Chơi Vui</h2>
+        <h3>1. Lập Trình Đơn Giản</h3>
+        <p>Viết mã JS để in "Hello World": console.log("___");</p>
+        <input type="text" id="tin1-answer" placeholder="Hello World">
+        <button onclick="checkTin1()">Chạy mã</button>
+        <div id="tin1-result"></div>
+        
+        <h3>2. Quiz Thuật Toán</h3>
+        <p>Thuật toán sắp xếp nào nhanh nhất? (Bubble Sort, Quick Sort)</p>
+        <button onclick="quizTin2('Quick Sort')">Quick Sort</button>
+        <button onclick="quizTin2('Bubble Sort')">Bubble Sort</button>
+        <div id="tin2-result"></div>
+        
+        <h3>3. Puzzle Mạng Máy Tính</h3>
+        <p>Chọn đúng: IP là gì? (Địa chỉ mạng, Tên máy)</p>
+        <button onclick="puzzleTin3('Địa chỉ mạng')">Địa chỉ mạng</button>
+        <button onclick="puzzleTin3('Tên máy')">Tên máy</button>
+        <div id="tin3-result"></div>
+        
+        <h3>4. Quiz Ngôn Ngữ Lập Trình</h3>
+        <p>Ngôn ngữ nào dùng cho web động? (HTML, JavaScript)</p>
+        <button onclick="quizTin4('JavaScript')">JavaScript</button>
+        <button onclick="quizTin4('HTML')">HTML</button>
+        <div id="tin4-result"></div>
+        
+        <h3>5. Mô Phỏng Thuật Toán Sắp Xếp</h3>
+        <p>Sắp xếp mảng [3,1,4,1,5] (nhấp để sắp xếp):</p>
+        <div id="tin5-array">[3,1,4,1,5]</div>
+        <button onclick="sortArray()">Sắp xếp</button>
+        <div id="tin5-result"></div>
+    </section>
+    
+    <script>
+        let score = 0;
+        const scoreElement = document.getElementById('score');
+        
+        function updateScore(points) {
+            score += points;
+            scoreElement.textContent = score;
+        }
+        
+        // Toán 1
+        function checkToan1() {
+            const answer = document.getElementById('toan1-answer').value;
+            const result = document.getElementById('toan1-result');
+            if (answer == 5) {
+                result.textContent = 'Đúng! 🎉';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai, thử lại!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Toán 2
+        function quizToan2(choice) {
+            const result = document.getElementById('toan2-result');
+            if (choice === 16) {
+                result.textContent = 'Đúng! 📐';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Toán 3
+        function checkToan3() {
+            const answer = document.getElementById('toan3-answer').value;
+            const result = document.getElementById('toan3-result');
+            if (answer === '1,2,3') {
+                result.textContent = 'Đúng! 🧩';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai, sắp xếp lại!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Toán 4
+        function quizToan4(choice) {
+            const result = document.getElementById('toan4-result');
+            if (choice === '2x') {
+                result.textContent = 'Đúng! 📈';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Toán 5
+        function drawGraph() {
+            const canvas = document.getElementById('toan5-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            for (let x = 0; x < canvas.width; x++) {
+                const y = (x - 150) ** 2 / 100 + 100; // y = x² scaled
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            document.getElementById('toan5-result').textContent = 'Đồ thị vẽ xong! 📊';
+            updateScore(15);
+        }
+        
+        // Lý 1
+        let gravityClicks = 0;
+        function simulateGravity() {
+            gravityClicks++;
+            const speed = gravityClicks * 9.8;
+            document.getElementById('ly1-result').textContent = `Số lần nhấp: ${gravityClicks} (Tốc độ rơi: ${speed.toFixed(1)} m/s)`;
+            updateScore(5);
+        }
+        
+        // Lý 2
+        function quizLy2(choice) {
+            const result = document.getElementById('ly2-result');
+            if (choice === 'Newton') {
+                result.textContent = 'Đúng! ⚡';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Lý 3
+        function puzzleLy3(choice) {
+            const result = document.getElementById('ly3-result');
+            if (choice === 'Có từ trường') {
+                result.textContent = 'Đúng! 🧲';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Lý 4
+        function quizLy4(choice) {
+            const result = document.getElementById('ly4-result');
+            if (choice === '3x10^8 m/s') {
+                result.textContent = 'Đúng! 🌞';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Lý 5
+        function startPendulum() {
+            const canvas = document.getElementById('ly5-canvas');
+            const ctx = canvas.getContext('2d');
+            let angle = 0;
+            const interval = setInterval(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const x = 150 + 100 * Math.sin(angle);
+                const y = 50 + 100 * Math.cos(angle);
+                ctx.beginPath();
+                ctx.moveTo(150, 50);
+                ctx.lineTo(x, y);
+                ctx.arc(x, y, 10, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.fill();
+                angle += 0.1;
+                if (angle > 2 * Math.PI) clearInterval(interval);
+            }, 50);
+            document.getElementById('ly5-result').textContent = 'Dao động xong! 🕰️';
+            updateScore(15);
+        }
+        
+        // Tin 1
+        function checkTin1() {
+            const answer = document.getElementById('tin1-answer').value;
+            const result = document.getElementById('tin1-result');
+            if (answer === 'Hello World') {
+                result.textContent = 'Đúng! Mã chạy thành công. 💻';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Tin 2
+        function quizTin2(choice) {
+            const result = document.getElementById('tin2-result');
+            if (choice === 'Quick Sort') {
+                result.textContent = 'Đúng! 🚀';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Tin 3
+        function puzzleTin3(choice) {
+            const result = document.getElementById('tin3-result');
+            if (choice === 'Địa chỉ mạng') {
+                result.textContent = 'Đúng! 🌐';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Tin 4
+        function quizTin4(choice) {
+            const result = document.getElementById('tin4-result');
+            if (choice === 'JavaScript') {
+                result.textContent = 'Đúng! 🖥️';
+                result.className = 'correct';
+                updateScore(10);
+            } else {
+                result.textContent = 'Sai!';
+                result.className = 'wrong';
+            }
+        }
+        
+        // Tin 5
+        function sortArray() {
+            let arr = [3, 1, 4, 1, 5];
+            arr.sort((a, b) => a - b);
+            document.getElementById('tin5-array').textContent = `[${arr.join(',')}]`;
+            document.getElementById('tin5-result').textContent = 'Sắp xếp xong! 🔢';
+            updateScore(15);
+        }
+    </script>
+</body>
+</html>
