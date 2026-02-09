@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Tập Vui Vẻ</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: linear-gradient(to bottom, #f0f8ff, #e6f7ff); color: #333; text-align: center; padding: 20px; margin: 0; }
+        h1 { color: #228b22; font-size: 2.5em; margin-bottom: 10px; }
+        p { font-size: 1.2em; margin-bottom: 20px; }
+        .menu { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 20px 0; }
+        button { background: linear-gradient(45deg, #ffd700, #ffed4e); border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 10px; transition: transform 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        button:hover { transform: scale(1.05); }
+        .section { display: none; margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); max-width: 800px; margin-left: auto; margin-right: auto; }
+        #spin-wheel { font-size: 24px; margin: 20px; color: #ff4500; font-weight: bold; }
+        #quiz-display { font-size: 20px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: 20px 0; }
+        #score-table { margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        th { background: #228b22; color: white; }
+        input { padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; width: 300px; max-width: 90%; }
+        #timer { font-size: 18px; color: #ff0000; }
+        #leaderboard { margin-top: 20px; }
+        canvas { display: none; position: fixed; top: 0; left: 0; pointer-events: none; } /* Cho confetti */
+        @media (max-width: 600px) { .menu { flex-direction: column; } button { width: 100%; } }
+    </style>
+</head>
+<body>
+    <h1>🎓 Học Tập Vui Vẻ! 🎓</h1>
+    <p>Trang web tương tác hiện đại giúp học tập trở nên hấp dẫn với lý thuyết, bài tập, và trò chơi gamified. Chọn tính năng để bắt đầu!</p>
+    
+    <div class="menu">
+        <button onclick="showSection('spin')">Vòng Quay Gọi Tên</button>
+        <button onclick="showSection('quiz')">Đấu Trường Trắc Nghiệm</button>
+        <button onclick="showSection('score')">Hệ Thống Ghi Điểm</button>
+        <button onclick="showSection('game')">Trò Chơi Đố Vui</button>
+        <button onclick="showSection('leaderboard')">Leaderboard</button>
+        <button onclick="showSection('weather')">Thời Tiết Học Tập</button>
+    </div>
+    
+    <!-- Vòng Quay Gọi Tên -->
+    <div id="spin" class="section">
+        <h2>🎡 Vòng Quay Gọi Tên Công Bằng</h2>
+        <p>Nhập danh sách học sinh (cách nhau bằng dấu phẩy). Máy tính sẽ quay ngẫu nhiên (dùng xác suất Toán học) để chọn, tạo hồi hộp mà không cần điện thoại!</p>
+        <input type="text" id="student-list" placeholder="Ví dụ: An, Binh, Linh" style="width: 300px; padding: 10px;">
+        <br><br>
+        <button onclick="spinWheel()">Quay!</button>
+        <div id="spin-wheel">Kết quả sẽ xuất hiện ở đây.</div>
+    </div>
+    
+    <!-- Đấu Trường Trắc Nghiệm -->
+    <div id="quiz" class="section">
+        <h2>⚔️ Đấu Trường Trắc Nghiệm</h2>
+        <p>Hiển thị câu hỏi lớn trên màn hình. Học sinh trả lời bằng cách giơ tay hoặc dùng bảng con. Phần mềm xử lý hiệu ứng hình ảnh và âm thanh sống động!</p>
+        <div id="quiz-display">Câu hỏi mẫu: 2 + 2 = ? (Đáp án: 4)</div>
+        <br>
+        <button onclick="nextQuestion()">Câu Hỏi Tiếp Theo</button>
+        <audio id="sound-effect" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" preload="auto"></audio>
+    </div>
+    
+    <!-- Hệ Thống Ghi Điểm -->
+    <div id="score" class="section">
+        <h2>🏆 Hệ Thống Ghi Điểm Trực Tiếp</h2>
+        <p>Giáo viên cộng/trừ điểm cho các tổ/đội ngay trên giao diện (thuật toán Toán học đơn giản), tạo thi đua lành mạnh!</p>
+        <table id="score-table">
+            <tr><th>Tổ/Đội</th><th>Điểm</th><th>Thao Tác</th></tr>
+            <tr><td>Tổ 1</td><td id="score1">0</td><td><button onclick="updateScore(1, 1)">+1</button> <button onclick="updateScore(1, -1)">-1</button></td></tr>
+            <tr><td>Tổ 2</td><td id="score2">0</td><td><button onclick="updateScore(2, 1)">+1</button> <button onclick="updateScore(2, -1)">-1</button></td></tr>
+            <tr><td>Tổ 3</td><td id="score3">0</td><td><button onclick="updateScore(3, 1)">+1</button> <button onclick="updateScore(3, -1)">-1</button></td></tr>
+        </table>
+    </div>
+    
+    <!-- Trò Chơi Đố Vui (Gamified Quiz) -->
+    <div id="game" class="section">
+        <h2>🎮 Trò Chơi Đố Vui</h2>
+        <p>Trả lời câu hỏi trong thời gian giới hạn! Đúng sẽ có điểm thưởng ngẫu nhiên (xác suất Toán học) và hiệu ứng confetti. Ham học hơn với gamification!</p>
+        <div id="game-display">Câu hỏi sẽ xuất hiện ở đây.</div>
+        <div id="timer">Thời gian: 10 giây</div>
+        <br>
+        <input type="text" id="answer-input" placeholder="Nhập đáp án" style="width: 200px;">
+        <button onclick="submitAnswer()">Trả Lời</button>
+        <div id="game-score">Điểm của bạn: 0</div>
+        <canvas id="confetti-canvas"></canvas>
+    </div>
+    
+    <!-- Leaderboard -->
+    <div id="leaderboard" class="section">
+        <h2>🏅 Leaderboard</h2>
+        <p>Bảng xếp hạng điểm cao nhất, khuyến khích thi đua lành mạnh!</p>
+        <table id="leaderboard-table">
+            <tr><th>Học Sinh/Tổ</th><th>Điểm Cao Nhất</th></tr>
+            <tr><td>An</td><td id="leader1">0</td></tr>
+            <tr><td>Binh</td><td id="leader2">0</td></tr>
+            <tr><td>Linh</td><td id="leader3">0</td></tr>
+        </table>
+        <br>
+        <button onclick="updateLeaderboard()">Cập Nhật Leaderboard</button>
+    </div>
+    
+    <!-- Thời Tiết Học Tập -->
+    <div id="weather" class="section">
+        <h2>🌤️ Thời Tiết Học Tập</h2>
+        <p>Kiểm tra thời tiết để quyết định học ngoài trời hay trong lớp (liên môn với Khoa học). Nhập thành phố và nhấn "Kiểm Tra"!</p>
+        <input type="text" id="city-input" placeholder="Ví dụ: Hanoi" style="width: 200px;">
+        <button onclick="getWeather()">Kiểm Tra Thời Tiết</button>
+        <div id="weather-display">Thời tiết sẽ xuất hiện ở đây.</div>
+    </div>
+    
+    <script>
+        // Hàm hiển thị section
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        
+        // Vòng Quay Gọi Tên
+        function spinWheel() {
+            const list = document.getElementById('student-list').value.split(',').map(s => s.trim()).filter(s => s);
+            if (list.length === 0) {
+                alert('Vui lòng nhập danh sách học sinh!');
+                return;
+            }
+            const randomIndex = Math.floor(Math.random() * list.length);
+            document.getElementById('spin-wheel').innerText = `Học sinh được chọn: ${list[randomIndex]}`;
+        }
+        
+        // Đấu Trường Trắc Nghiệm
+        const questions = [
+            "Câu hỏi 1: 5 + 3 = ? (Đáp án: 8)",
+            "Câu hỏi 2: Thủ đô Việt Nam là? (Đáp án: Hà Nội)",
+            "Câu hỏi 3: 10 - 4 = ? (Đáp án: 6)"
+        ];
+        let currentQuestion = 0;
+        function nextQuestion() {
+            document.getElementById('quiz-display').innerText = questions[currentQuestion];
+            document.getElementById('sound-effect').play();
+            currentQuestion = (currentQuestion + 1) % questions.length;
+        }
+        
+        // Hệ Thống Ghi Điểm
+        function updateScore(team, change) {
+            const scoreElement = document.getElementById(`score${team}`);
+            let currentScore = parseInt(scoreElement.innerText);
+            currentScore += change;
+            scoreElement.innerText = currentScore;
+        }
+        
+        // Trò Chơi Đố Vui (Gamified)
+        const gameQuestions = [
+            { q: "5 * 2 = ?", a: "10" },
+            { q: "Thủ đô Mỹ là?", a: "Washington" },
+            { q: "10 / 2 = ?", a: "5" }
+        ];
+        let gameIndex = 0;
+        let gameScore = 0;
+        let timeLeft = 10;
+        let timerInterval;
+        function startGame() {
+            gameIndex = 0;
+            gameScore = 0;
+            document.getElementById('game-display').innerText = gameQuestions[gameIndex].q;
+            document.getElementById('game-score').innerText = `Điểm của bạn: ${gameScore}`;
+            timeLeft = 10;
+            document.getElementById('timer').innerText = `Thời gian: ${timeLeft} giây`;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').innerText = `Thời gian: ${timeLeft} giây`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    alert('Hết thời gian! Chơi lại?');
+                    startGame();
+                }
+            }, 1000);
+        }
+        function submitAnswer() {
+            const answer = document.getElementById('answer-input').value.trim().toLowerCase();
+            if (answer === gameQuestions[gameIndex].a.toLowerCase()) {
+                const bonus = Math.floor(Math.random() * 5) + 1; // Thưởng ngẫu nhiên (xác suất)
+                gameScore += 10 + bonus; // Thuật toán nhân/chia điểm
+                document.getElementById('game-score').innerText = `Điểm của bạn: ${gameScore}`;
+                launchConfetti(); // Hiệu ứng confetti
+                alert(`Đúng! +${10 + bonus} điểm`);
+            } else {
+                alert('Sai! Thử lại.');
+            }
+            gameIndex = (gameIndex + 1) % gameQuestions.length;
+            document.getElementById('game-display').innerText = gameQuestions[gameIndex].q;
+            document.getElementById('answer-input').value = '';
+        }
+        // Hiệu ứng confetti (thư viện đơn giản)
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti-canvas');
+            canvas.style.display = 'block';
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            for (let i = 0; i < 100; i++) {
+                ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 5, 5);
+            }
+            setTimeout(() => canvas.style.display = 'none', 2000);
+        }
+        startGame(); // Khởi động trò chơi khi load
+        
+        // Leaderboard
+        function updateLeaderboard() {
+            // Giả lập cập nhật từ điểm trò chơi
+            document.getElementById('leader1').innerText = Math.max(parseInt(document.getElementById('leader1').innerText), gameScore);
+            // Thêm logic để cập nhật từ các tổ
+        }
+        
+        // Thời Tiết Học Tập (dùng API miễn phí)
+        async function getWeather() {
+            const city = document.getElementById('city-input').value;
+            if (!city) {
+                alert('Nhập tên thành phố!');
+                return;
+            }
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=YOUR_API_KEY&units=metric&lang=vi`);
+                const data = await response.json();
+                document.getElementById('weather-display').innerText = `Thời tiết ở ${city}: ${data.weather[0].description}, Nhiệt độ: ${data.main.temp}°C. Nếu nắng đẹp, học ngoài trời nhé!`;
+            } catch (error) {
+                document.getElementById('weather-display').innerText = 'Không tìm thấy thời tiết. Kiểm tra tên thành phố!';
+            }
+        }
+        // Lưu ý: Thay YOUR_API_KEY bằng key từ openweathermap.org (miễn phí)
+    </script>
+</body>
+  </html>
